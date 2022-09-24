@@ -2,11 +2,11 @@ import React from 'react'
 import './fonts/icomoon/style.css';
 import './css/bootstrap.min.css';
 import './css/magnific-popup.css';
-// import './css/jquery-ui.css';
-// import './css/owl.carousel.min.css';
 import './css/owl.theme.default.min.css';
 import './css/aos.css';
-import './css/style.css'
+import './css/style.css';
+
+
 export default function Home() {
   return (
     <div className="site-wrap">
@@ -32,7 +32,7 @@ export default function Home() {
           </div>
           <div className="main-nav d-none d-lg-block">
             <nav className="site-navigation text-right text-md-center" role="navigation">
-              <ul className="site-menu js-clone-nav d-none d-lg-block">
+              <ul className="site-menu  d-none d-lg-block">
                 <li className="active"><a href="index.html">Home</a></li>
                 <li><a href="shop.html">Store</a></li>
                 <li className="has-children">
@@ -59,11 +59,15 @@ export default function Home() {
             </nav>
           </div>
           <div className="icons">
-            <a href="#" className="icons-btn d-inline-block js-search-open"><span className="icon-search"></span></a>
-            <a href="cart.html" className="icons-btn d-inline-block bag">
+            {/* <a href="#" className="icons-btn d-inline-block js-search-open"><span className="icon-search"></span></a> */}
+            <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+            {/* <a href="cart.html" className="icons-btn d-inline-block bag">
               <span className="icon-shopping-bag"></span>
-              <span className="number">2</span>
-            </a>
+              {/* <span className="number">2</span> 
+            </a> */}
             <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
                 className="icon-menu"></span></a>
           </div>
@@ -181,7 +185,7 @@ export default function Home() {
     </div>
 
     
-    <div className="site-section bg-light">
+    {/* <div className="site-section bg-light">
       <div className="container">
         <div className="row">
           <div className="title-section text-center col-12">
@@ -220,9 +224,9 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
 
-    <div className="site-section">
+    {/* <div className="site-section">
       <div className="container">
         <div className="row">
           <div className="title-section text-center col-12">
@@ -279,7 +283,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
 
     <div className="site-section bg-secondary bg-image" style={{backgroundImage: "url('./images/bg_2.jpg')"}}>
       <div className="container">
