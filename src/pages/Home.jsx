@@ -8,15 +8,21 @@ import './css/style.css';
 
 
 export default function Home() {
+    function togglesearch(){
+        console.log('toggle  called');
+        document.getElementById('searchToggle').classList.toggle('active');
+        console.log(document.getElementById('searchToggle').classList);
+    }
+
   return (
     <div className="site-wrap">
 
 
     <div className="site-navbar py-2">
 
-      <div className="search-wrap">
+      <div className="search-wrap" id='searchToggle'>
         <div className="container">
-          <a href="#" className="search-close js-search-close"><span className="icon-close2"></span></a>
+          <a className="search-close js-search-close"><span onClick={togglesearch} className="icon-close2"></span></a>
           <form action="#" method="post">
             <input type="text" className="form-control" placeholder="Search keyword and hit enter..." />
           </form>
@@ -59,15 +65,15 @@ export default function Home() {
             </nav>
           </div>
           <div className="icons">
-            {/* <a href="#" className="icons-btn d-inline-block js-search-open"><span className="icon-search"></span></a> */}
-            <form class="form-inline">
+            <a href='#' className="icons-btn d-inline-block js-search-open"><span onClick={togglesearch} className="icon-search"></span></a>
+            {/* <form class="form-inline">
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
-            {/* <a href="cart.html" className="icons-btn d-inline-block bag">
+  </form> */}
+            <a href="cart.html" className="icons-btn d-inline-block bag">
               <span className="icon-shopping-bag"></span>
-              {/* <span className="number">2</span> 
-            </a> */}
+               <span className="number">2</span> 
+            </a>
             <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
                 className="icon-menu"></span></a>
           </div>
@@ -350,7 +356,7 @@ export default function Home() {
           <div className="col-md-12">
             <p>
               Copyright &copy;
-              <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
+               <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
               with <i className="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"
                 className="text-primary">Colorlib</a>
             </p>
@@ -360,5 +366,6 @@ export default function Home() {
       </div>
     </footer>
   </div>
+
   )
 }
