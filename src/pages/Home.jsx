@@ -39,8 +39,8 @@ export default function Home() {
           <div className="main-nav d-none d-lg-block">
             <nav className="site-navigation text-right text-md-center" role="navigation">
               <ul className="site-menu  d-none d-lg-block">
-                <li className="active"><a href="index.html">Home</a></li>
-                <li><a href="shop.html">Store</a></li>
+                <li className="active"><a href="#">Home</a></li>
+                <li><a href="/shop">Store</a></li>
                 <li className="has-children">
                   <a href="#">Dropdown</a>
                   <ul className="dropdown">
@@ -59,8 +59,8 @@ export default function Home() {
                     
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
               </ul>
             </nav>
           </div>
@@ -70,9 +70,9 @@ export default function Home() {
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form> */}
-            <a href="cart.html" className="icons-btn d-inline-block bag">
+            <a href="/cart" className="icons-btn d-inline-block bag">
               <span className="icon-shopping-bag"></span>
-               <span className="number">2</span> 
+               {/* <span className="number">2</span>  */}
             </a>
             <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
                 className="icon-menu"></span></a>
@@ -89,7 +89,7 @@ export default function Home() {
               <h2 className="sub-title">Effective Medicine, New Medicine Everyday</h2>
               <h1>Welcome To Pharma</h1>
               <p>
-                <a href="#" className="btn btn-primary px-5 py-3">Shop Now</a>
+                <a href="/shop" className="btn btn-primary px-5 py-3">Shop Now</a>
               </p>
             </div>
           </div>
