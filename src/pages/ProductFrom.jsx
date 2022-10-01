@@ -1,10 +1,18 @@
+import './css/prodinp.css'
 import React from 'react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { storage } from '../firebase';
+import {useCookies} from 'react-cookie';
 import {ref,uploadBytes,getDownloadURL} from 'firebase/storage'
+var CryptoJS = require('crypto-js');
 export default function ProductFrom() {
-
+    const [cookies] = useCookies('user');
+    var bytes = CryptoJS.AES.decrypt(cookies.user, 'my-secret-key@123');
+    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    const seller = decryptedData.email;
     var image;
+    const [categories,setCategories] = useState('');
+    const [ctg,setCtg] = useState('');
     const [imagefire,setImagefire] = useState(null);
     const [title,setTitle] = useState("");
     const [price,setPrice] = useState("");
@@ -15,6 +23,41 @@ export default function ProductFrom() {
     const [edition,setEdition] = useState("");
     const [publication,setPublication] = useState("");
     const [description,setDescription] = useState("");
+
+    useEffect(()=>{
+        getCategories();
+    },[]);
+
+    async function getCategories(){
+        const c = await fetch('http://localhost:5000/categories',{
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+        const d = await c.json();
+        setCategories(d.categories);
+    }
+
+    function show() {
+        document.getElementById("myDropdown").classList.toggle("show");
+      }
+
+      function filterFunction() {
+        var input, filter, ul, li, a, i;
+        var input = document.getElementById("myInput");
+        var filter = input.value.toUpperCase();
+        var div = document.getElementById("myDropdown");
+        var a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+          var txtValue = a[i].textContent || a[i].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+          } else {
+            a[i].style.display = "none";
+          }
+        }
+      }
 
     async function uploadImage(id){
       if(imagefire==null) return ;
@@ -65,7 +108,9 @@ export default function ProductFrom() {
             pyear,
             edition,
             publication,
-            description
+            description,
+            seller,
+            category: ctg
           })
         })
     
@@ -76,7 +121,8 @@ export default function ProductFrom() {
             uploadImage(data.id)
         }
       }
-
+if(categories){
+    console.log(categories)
   return (
     <div class="container">
         <div class="row justify-content-center">
@@ -101,6 +147,18 @@ export default function ProductFrom() {
                         <label class="form-label" for="form2Example2">Condition</label>
                         <input type="text" id="form2Example2" value={condition} onChange = {(e)=>{setCondition(e.target.value)}} class="form-control" />
                     </div>
+
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="myInput">Category</label>
+                        {/* <input type="text" placeholder="Search.." id="myInput" onFocus={show} onBlur={show} onKeyUp={filterFunction} /> */}
+                        <input type="text" id="myInput" value={ctg}  onFocus={show} onKeyUp={filterFunction}  onChange = {(e)=>{setCtg(e.target.value)}} class="form-control" />
+                        <div id="myDropdown" class="dropdown-content">
+                        {categories.map((c)=>
+                        <a onClick={()=>{setCtg(c.name);show()}} href="#">{c.name}</a>
+                        )}
+                        </div>
+                    </div>
+
                     <div class="form-outline mb-4">
                         <label class="form-label" for="form2Example2">Author</label>
                         <input type="text" id="form2Example2" value={author} onChange = {(e)=>{setAuthor(e.target.value)}} class="form-control" />
@@ -135,5 +193,12 @@ export default function ProductFrom() {
             </div>
         </div>
     </div>
-  )
+  )}
+  else{
+    return(
+        <div>
+            Loading
+        </div>
+    )
+  }
 }

@@ -61,6 +61,7 @@ export default function Home() {
                 </li>
                 <li><a href="/about">About</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="/productform">Sell</a></li>
               </ul>
             </nav>
           </div>

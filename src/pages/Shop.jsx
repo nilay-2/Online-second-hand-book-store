@@ -118,7 +118,7 @@ export default function Shop() {
       <div class="site-section">
         <div class="container">
           <div class="row">
-            <div class="col-lg-6">
+            {/* <div class="col-lg-6">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">
                 Filter by Price
               </h3>
@@ -130,7 +130,7 @@ export default function Shop() {
                 class="form-control border-0 pl-0 bg-white"
                 disabled=""
               />
-            </div>
+            </div> */}
             <div class="col-lg-6">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">
                 Filter by Reference
