@@ -13,6 +13,8 @@ import ShopSingle from './pages/ShopSingle';
 import Thankyou from './pages/Thankyou';
 import Chat from './pages/Chat';
 import ProductFrom from './pages/ProductFrom';
+import Myproducts from './pages/Myproducts';
+import Couponform from './pages/Couponform';
 function App() {
   return (
     <BrowserRouter>
@@ -25,10 +27,12 @@ function App() {
       <Route exact path='/shop' element={<Shop/>} />
       <Route exact path='/cart' element={<Cart/>} />
       <Route exact path='/register' element={<Register/>} />
-      <Route exact path='/detail' element={<ShopSingle/>} />
+      <Route exact path='/details/:id' element={<ShopSingle/>} />
       <Route exact path='/thankyou' element={<Thankyou/>} />
       <Route exact path='/chat' element={<Chat/>} />
       <Route exact path='/productform' element={<ProductFrom/>} />
+      <Route exact path='/myproducts' element={<Myproducts/>} />
+      <Route exact path='/couponform/:product' element={<Couponform/>} />
     </Routes>
     </BrowserRouter>
   );

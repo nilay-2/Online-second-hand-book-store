@@ -24,6 +24,7 @@ export default function Register() {
   
       const data = await res.json();
       if(data.status === 'ok'){
+        console.log(data);
         alert('User Created')
         window.location.href = '/';
       }

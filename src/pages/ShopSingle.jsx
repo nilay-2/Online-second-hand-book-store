@@ -1,6 +1,65 @@
 import React from 'react'
-
+import { useState,useEffect } from 'react';
+import { useParams } from 'react-router-dom'
+import {useCookies} from 'react-cookie';
+var CryptoJS = require('crypto-js');
 export default function ShopSingle() {
+    const [cookies] = useCookies('user');
+    var bytes = CryptoJS.AES.decrypt(cookies.user, 'my-secret-key@123');
+    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    const user = decryptedData.email;
+    const {id} = useParams();
+    const [details,setDetails] = useState('');
+    useEffect(()=>{
+        getDetails();
+    },[])
+
+    async function addToCart(){
+        const res = await fetch('http://localhost:5000/cart/add',{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id,
+                user,
+              })
+        })
+        const data = await res.json();
+        if(data.status==='ok'){
+            alert("Added To Cart");
+            window.location.href = "/cart";
+        }
+    }
+
+    function min(){
+        const v = document.getElementById("quantity");
+        if(v.value==0){
+            return;
+        }
+        v.value = v.value - 1;
+    }
+
+    function add(){
+        const v = document.getElementById("quantity");
+        v.value = parseInt(v.value) + 1;
+    }
+
+    async function getDetails(){
+        const res = await fetch(`http://localhost:5000/product/details`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id
+      })
+    })
+    const data = await res.json();
+    console.log(data);
+    setDetails(data.details);
+    }
+    if(details){
     return (
         <div class="site-wrap">
 
@@ -67,45 +126,44 @@ export default function ShopSingle() {
             <div class="bg-light py-3">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a
-                            href="shop.html">Store</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Ibuprofen Tablets, 200mg</strong></div>
+                        <div class="col-md-12 mb-0"><a href="/home">Home</a> <span class="mx-2 mb-0">/</span> <a
+                            href="/store">Store</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">{details.title}</strong></div>
                     </div>
                 </div>
             </div>
 
             <div class="site-section">
                 <div class="container">
+                    {
                     <div class="row">
-                        <div class="col-md-5 mr-auto">
-                            <div class="border text-center">
-                                <img src="images/product_07_large.png" alt="Pic" class="img-fluid p-5" />
+                        <div class="col-md-5 mr-auto" >
+                            <div class="text-center">
+                                <img src={details.image} alt="Pic" class="img-fluid p-5" style={{boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",borderRadius: "10px"}}/>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <h2 class="text-black">Ibuprofen Tablets, 200mg</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, vitae, explicabo? Incidunt facere, natus
-                                soluta dolores iusto! Molestiae expedita veritatis nesciunt doloremque sint asperiores fuga voluptas,
-                                distinctio, aperiam, ratione dolore.</p>
+                            <h2 class="text-black">{details.title}</h2>
+                            <p>{details.description}</p>
 
 
-                            <p><del>$95.00</del>  <strong class="text-primary h4">$55.00</strong></p>
+                            <p>  <strong class="text-primary h4">₹ {details.price}</strong></p>
 
 
 
-                            <div class="mb-5">
+                            {/* <div class="mb-5">
                                 <div class="input-group mb-3" style={{maxWidth: "220px"}}>
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                                        <button class="btn btn-outline-primary js-btn-minus" onClick={min} type="button">&minus;</button>
                                     </div>
-                                    <input type="text" class="form-control text-center" value="1" placeholder=""
+                                    <input type="text" id='quantity' class="form-control text-center" value="1" placeholder=""
                                         aria-label="Example text with button addon" aria-describedby="button-addon1" />
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-primary js-btn-plus" type="button">+</button>
+                                        <button class="btn btn-outline-primary js-btn-plus" onClick={add} type="button">+</button>
                                     </div>
                                 </div>
 
-                            </div>
-                            <p><a href="cart.html" class="buy-now btn btn-sm height-auto px-4 py-3 btn-primary">Add To Cart</a></p>
+                            </div> */}
+                            <p><a href="#" class="buy-now btn btn-sm height-auto px-4 py-3 btn-primary" onClick={addToCart}>Add To Cart</a></p>
 
                             <div class="mt-5">
                                 <ul class="nav nav-pills mb-3 custom-pill" id="pills-tab" role="tablist">
@@ -122,20 +180,28 @@ export default function ShopSingle() {
 
                                             <tbody>
                                                 <tr>
-                                                    <td>HPIS CODE</td>
-                                                    <td class="bg-light">999_200_40_0</td>
+                                                    <td>Condition</td>
+                                                    <td class="bg-light">{details.condition}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>HEALTHCARE PROVIDERS ONLY</td>
-                                                    <td class="bg-light">No</td>
+                                                    <td>Author</td>
+                                                    <td class="bg-light">{details.author}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>LATEX FREE</td>
-                                                    <td class="bg-light">Yes, No</td>
+                                                    <td>Pages</td>
+                                                    <td class="bg-light">{details.pages}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>MEDICATION ROUTE</td>
-                                                    <td class="bg-light">Topical</td>
+                                                    <td>Publication Year</td>
+                                                    <td class="bg-light">{details.pyear}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Category</td>
+                                                    <td class="bg-light">{details.category.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Seller</td>
+                                                    <td class="bg-light">{details.seller.name}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -148,10 +214,11 @@ export default function ShopSingle() {
 
                         </div>
                     </div>
+                    }
                 </div>
             </div>
 
-            <div class="site-section bg-secondary bg-image" style={{backgroundImage: "url('images/bg_2.jpg')"}}>
+            {/* <div class="site-section bg-secondary bg-image" style={{backgroundImage: "url('images/bg_2.jpg')"}}>
                 <div class="container">
                     <div class="row align-items-stretch">
                         <div class="col-lg-6 mb-5 mb-lg-0">
@@ -174,9 +241,9 @@ export default function ShopSingle() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
-
+            <hr style={{border: "2px solid black"}}/>
             <footer class="site-footer">
                 <div class="container">
                     <div class="row">
@@ -214,12 +281,12 @@ export default function ShopSingle() {
                     </div>
                     <div class="row pt-5 mt-5 text-center">
                         <div class="col-md-12">
-                            {/* <p>
+                            <p>
                                 Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
+                                 <script>document.write(new Date().getFullYear());</script> All rights reserved {/*| This template is made
                                 with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" rel="noreferrer"
-                                    class="text-primary">Colorlib</a>
-                            </p> */}
+                                    class="text-primary">Colorlib</a> */}
+                            </p>
                         </div>
 
                     </div>
@@ -227,5 +294,12 @@ export default function ShopSingle() {
             </footer>
         </div>
 
-    )
+    )}
+    else{
+        return(
+            <div>
+                Loading
+            </div>
+        )
+    }
 }

@@ -1123,3 +1123,6 @@ a {
 
 .custom-table td {
   color: #000; }
+.hidden{
+  display: none;
+}

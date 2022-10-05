@@ -5,15 +5,34 @@ import './css/magnific-popup.css';
 import './css/owl.theme.default.min.css';
 import './css/aos.css';
 import './css/style.css';
-
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Home() {
+
+  const [products,setProducts] = useState('');
+
+  useEffect(()=>{
+    getProducts();
+  },[])
+
+  async function getProducts(){
+    const res = await fetch('http://localhost:5000/products',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await res.json();
+    setProducts(data.products);
+  }
+
     function togglesearch(){
         console.log('toggle  called');
         document.getElementById('searchToggle').classList.toggle('active');
         console.log(document.getElementById('searchToggle').classList);
     }
-
+if(products){
   return (
     <div className="site-wrap">
 
@@ -41,7 +60,7 @@ export default function Home() {
               <ul className="site-menu  d-none d-lg-block">
                 <li className="active"><a href="#">Home</a></li>
                 <li><a href="/shop">Store</a></li>
-                <li className="has-children">
+                {/* <li className="has-children">
                   <a href="#">Dropdown</a>
                   <ul className="dropdown">
                     <li><a href="#">Supplements</a></li>
@@ -58,10 +77,11 @@ export default function Home() {
                     <li><a href="#">Tea &amp; Coffee</a></li>
                     
                   </ul>
-                </li>
+                </li> */}
                 <li><a href="/about">About</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/productform">Sell</a></li>
+                <li><a href="/myproducts">My Products</a></li>
               </ul>
             </nav>
           </div>
@@ -100,7 +120,7 @@ export default function Home() {
 
     <div className="site-section">
       <div className="container">
-        <div className="row align-items-stretch section-overlap">
+        <div className="row align-items-stretch section-overlap" style={{justifyContent: "space-evenly"}}>
           <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div className="banner-wrap bg-primary h-100">
               <a href="#" className="h-100">
@@ -115,7 +135,7 @@ export default function Home() {
           <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div className="banner-wrap h-100">
               <a href="#" className="h-100">
-                <h5>Season <br/> Sale 50% Off</h5>
+                <h5>Season <br/> Get upto 50% Off</h5>
                 <p>
                   Amet sit amet dolor
                   <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
@@ -123,7 +143,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
+          {/* <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div className="banner-wrap bg-warning h-100">
               <a href="#" className="h-100">
                 <h5>Buy <br/> A Gift Card</h5>
@@ -133,7 +153,7 @@ export default function Home() {
                 </p>
               </a>
             </div>
-          </div>
+          </div> */}
 
         </div>
       </div>
@@ -143,23 +163,26 @@ export default function Home() {
       <div className="container">
         <div className="row">
           <div className="title-section text-center col-12">
-            <h2 className="text-uppercase">Popular Products</h2>
+            <h2 className="text-uppercase">Newly Added</h2>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+        <div className="row" style={{justifyContent: "space-evenly"}}>
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
             <span className="tag">Sale</span>
             <a href="shop-single.html"> <img src="images/product_01.png" alt="Image" /></a>
             <h3 className="text-dark"><a href="shop-single.html">Bioderma</a></h3>
             <p className="price"><del>95.00</del> &mdash; $55.00</p>
+          </div> */}
+          {products.map((prod)=>
+          <div className="col-sm-5 col-lg-4 text-center item mb-4 my-2 mx-2" style={{boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",borderRadius: "10px"}}>
+            <a href={`/details/${prod._id}`}> <img src={prod.image} alt="Image" height="300" width="300" style={{marginTop: "2em",boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}} /></a>
+            <h3 className="text-dark"><a href={`/details/${prod._id}`}>{prod.title}</a></h3>
+            <p className="price">₹ {prod.price}</p>
           </div>
-          <div className="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="shop-single.html"> <img src="images/product_02.png" alt="Image" /></a>
-            <h3 className="text-dark"><a href="shop-single.html">Chanca Piedra</a></h3>
-            <p className="price">$70.00</p>
-          </div>
-          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+          )
+          }
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
             <a href="shop-single.html"> <img src="images/product_03.png" alt="Image" /></a>
             <h3 className="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
             <p className="price">$120.00</p>
@@ -181,13 +204,13 @@ export default function Home() {
             <a href="shop-single.html"> <img src="images/product_06.png" alt="Image" /></a>
             <h3 className="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
             <p className="price"><del>$89</del> &mdash; $38.00</p>
-          </div>
+          </div> */}
         </div>
-        <div className="row mt-5">
+        {/* <div className="row mt-5">
           <div className="col-12 text-center">
             <a href="shop.html" className="btn btn-primary px-4 py-3">View All Products</a>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
 
@@ -292,7 +315,7 @@ export default function Home() {
       </div>
     </div> */}
 
-    <div className="site-section bg-secondary bg-image" style={{backgroundImage: "url('./images/bg_2.jpg')"}}>
+    {/* <div className="site-section bg-secondary bg-image" style={{backgroundImage: "url('./images/bg_2.jpg')"}}>
       <div className="container">
         <div className="row align-items-stretch">
           <div className="col-lg-6 mb-5 mb-lg-0">
@@ -315,9 +338,9 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
 
-
+<hr style={{border: "2px solid black"}}/>
     <footer className="site-footer">
       <div className="container">
         <div className="row">
@@ -357,9 +380,9 @@ export default function Home() {
           <div className="col-md-12">
             <p>
               Copyright &copy;
-               <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
+                <script>document.write(new Date().getFullYear());</script> All rights reserved {/*| This template is made
               with <i className="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"
-                className="text-primary">Colorlib</a>
+                className="text-primary">Colorlib</a> */}
             </p>
           </div>
 
@@ -369,4 +392,12 @@ export default function Home() {
   </div>
 
   )
+}
+else{
+  return(
+    <div>
+      Loading
+    </div>
+  )
+}
 }

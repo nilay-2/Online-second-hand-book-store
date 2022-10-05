@@ -1,11 +1,204 @@
+import { uploadBytesResumable } from "firebase/storage";
 import React from "react";
-
+import { useState,useEffect } from 'react';
+import {useCookies} from 'react-cookie';
+var CryptoJS = require('crypto-js');
 export default function Cart() {
+  var total = 0;
+  var sub = 0;
+  const [items,setItems] = useState('');
+  const [coupon,setCoupon] = useState('');
+  const [cookies] = useCookies('user');
+    var bytes = CryptoJS.AES.decrypt(cookies.user, 'my-secret-key@123');
+    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    const user = decryptedData.email;
+
+    useEffect(()=>{
+      getItems();
+    })
+
+
+
+    function isDate(val) {
+      // Cross realm comptatible
+      return Object.prototype.toString.call(val) === '[object Date]'
+    }
+    
+    function isObj(val) {
+      return typeof val === 'object'
+    }
+    
+     function stringifyValue(val) {
+      if (isObj(val) && !isDate(val)) {
+        return JSON.stringify(val)
+      } else {
+        return val
+      }
+    }
+    
+    function buildForm({ action, params }) {
+      const form = document.createElement('form')
+      form.setAttribute('method', 'post')
+      form.setAttribute('action', action)
+    
+      Object.keys(params).forEach(key => {
+        const input = document.createElement('input')
+        input.setAttribute('type', 'hidden')
+        input.setAttribute('name', key)
+        input.setAttribute('value', stringifyValue(params[key]))
+        form.appendChild(input)
+      })
+    
+      return form
+    }
+    
+     function post(details) {
+      const form = buildForm(details)
+      document.body.appendChild(form)
+      form.submit()
+      form.remove()
+    }
+  
+    
+  
+    async function getData(){
+      const amount = document.getElementById("total").innerHTML;
+      console.log(amount);
+      const res = await fetch('http://localhost:5000/api/payment',{
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user,
+          amount
+        })
+      })
+      const data = await res.json();
+      return data.params;
+    }
+  
+    async function makePayment(){
+      const response = await getData();
+      var information={
+        action:"https://securegw-stage.paytm.in/order/process",
+        params:response
+    }
+    console.log(information);
+      post(information)
+    }
+
+
+
+    async function remove(id){
+        const res = await fetch('http://localhost:5000/cart/remove',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user,
+            id
+          })
+        })
+        const data = await res.json();
+        if(data.status=='ok'){
+          alert("Item Removed");
+          window.location.reload();
+        }
+        else{
+          alert("Error Occured");
+        }
+    }
+
+    async function applyCoupon(id){
+      const res = await fetch('http://localhost:5000/coupon/verify',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user,
+          id,
+          coupon
+        })
+      })
+      const data = await res.json();
+      if(data.status=='true'){
+        document.getElementById("couponspan").classList.remove("hidden");
+        document.getElementById("discount").innerHTML = data.coupon.nprice;
+        alert("Applied Coupon");
+        updateSub();
+      }
+      else{
+        alert("Invalid Coupon");
+      }
+  }
+
+    function min(i,price){
+      const v = document.getElementById(`quantity${i}`);
+      const it = document.getElementById(`itmprc${i}`);
+      if(v.placeholder==1){
+          return;
+      }
+      v.placeholder = parseInt(v.placeholder) - 1;
+      it.innerText = parseInt(v.placeholder)*price;
+      updateSub();
+  }
+
+  function add(i,price){
+    console.log(i);
+      const v = document.getElementById(`quantity${i}`);
+      const it = document.getElementById(`itmprc${i}`); 
+      v.placeholder = parseInt(v.placeholder) + 1;
+      it.innerText = parseInt(v.placeholder)*price;
+      updateSub();
+  }
+
+  function updateSub(){
+    sub = 0;
+    const s = document.getElementsByClassName('price');
+    for(var i=0;i<s.length;i++){
+      sub = sub+ parseInt(s[i].innerHTML);
+    }
+    document.getElementById("sub").innerHTML = sub;
+    updateTotal(sub)
+  }
+
+  function updateTotal(sub){
+    document.getElementById("total").innerHTML = sub - parseInt(document.getElementById("discount").innerHTML)
+  }
+
+    async function getItems(){
+      const res = await fetch('http://localhost:5000/cart/get',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user
+      })
+    })
+    const data = await res.json();
+    setItems(data.items.cart);
+    }
+
+    function subtotal(){
+      items.map((itm)=>{
+        sub += itm.price
+      })
+      total = sub
+      return true
+    }
+
   function togglesearch() {
     console.log("toggle  called");
     document.getElementById("searchToggle").classList.toggle("active");
     console.log(document.getElementById("searchToggle").classList);
   }
+
+  if(items && subtotal()){
   return (
     <div class="site-wrap">
       <div class="site-navbar py-2">
@@ -132,20 +325,47 @@ export default function Cart() {
                     </tr>
                   </thead>
                   <tbody>
+                    {items.map((item,i)=>
                     <tr>
                       <td class="product-thumbnail">
                         <img
-                          src="images/product_02.png"
+                          src={item.image}
                           alt="Image"
                           class="img-fluid"
                         />
                       </td>
                       <td class="product-name">
-                        <h2 class="h5 text-black">Ibuprofen</h2>
+                        <h2 class="h5 text-black">{item.title}</h2>
+                        <div class="row">
+                {/* <div class="col-md-12">
+                  <label class="text-black h4" for="coupon">
+                    Coupon
+                  </label>
+                  <p>Enter your coupon code if you have one.</p>
+                </div> */}
+                <div class="col-md-5 mb-1 mb-md-0">
+                  <input
+                    type="text"
+                    class="form-control py-3"
+                    value={coupon}
+                    onChange={(e)=>{setCoupon(e.target.value)}}
+                    placeholder="Coupon"
+                  />
+                </div>
+                {/* <div class="col-md-4">
+                  <button onClick={()=>{applyCoupon(item._id)}} class="btn btn-primary btn-md px-4">
+                    Apply Coupon
+                  </button>
+                </div> */}
+                 <div class="col-md-4">
+                <a href="#" onClick={()=>{applyCoupon(item._id)}} class="btn btn-primary btn-md px-4">
+                Apply Coupon
+                        </a></div>
+              </div>
                       </td>
-                      <td>$55.00</td>
+                      <td>₹ {item.price}</td>
                       <td>
-                        <div
+                        {/* <div
                           class="input-group mb-3"
                           style={{ maxWidth: "120px" }}
                         >
@@ -153,6 +373,7 @@ export default function Cart() {
                             <button
                               class="btn btn-outline-primary js-btn-minus"
                               type="button"
+                              onClick={min}
                             >
                               &minus;
                             </button>
@@ -160,79 +381,38 @@ export default function Cart() {
                           <input
                             type="text"
                             class="form-control text-center"
+                            id={`quantity${i}`}
                             value="1"
                             placeholder=""
                             aria-label="Example text with button addon"
                             aria-describedby="button-addon1"
                           />
                           <div class="input-group-append">
-                            <button
-                              class="btn btn-outline-primary js-btn-plus"
-                              type="button"
-                            >
-                              &plus;
-                            </button>
+                            <button class="btn btn-outline-primary js-btn-plus" onClick={()=>{add(`quantity${i}`)}} type="button">+</button>
                           </div>
-                        </div>
-                      </td>
-                      <td>$49.00</td>
-                      <td>
-                        <a href="#" class="btn btn-primary height-auto btn-sm">
-                          X
-                        </a>
-                      </td>
-                    </tr>
+                        </div> */}
+                        <div class="mb-5">
+                                <div class="input-group mb-3" style={{maxWidth: "220px"}}>
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-primary js-btn-minus" onClick={()=>{min(i,item.price)}} type="button">&minus;</button>
+                                    </div>
+                                    <input type="number" id={`quantity${i}`} class="form-control text-center" placeholder="1"
+                                        aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary js-btn-plus" onClick={()=>{add(i,item.price)}} type="button">+</button>
+                                    </div>
+                                </div>
 
-                    <tr>
-                      <td class="product-thumbnail">
-                        <img
-                          src="images/product_01.png"
-                          alt="Image"
-                          class="img-fluid"
-                        />
+                            </div>
                       </td>
-                      <td class="product-name">
-                        <h2 class="h5 text-black">Bioderma</h2>
-                      </td>
-                      <td>$49.00</td>
+                      <td>₹ <span className="price" id={`itmprc${i}`}>{item.price}</span></td>
                       <td>
-                        <div
-                          class="input-group mb-3"
-                          style={{ maxWidth: "120px" }}
-                        >
-                          <div class="input-group-prepend">
-                            <button
-                              class="btn btn-outline-primary js-btn-minus"
-                              type="button"
-                            >
-                              &minus;
-                            </button>
-                          </div>
-                          <input
-                            type="text"
-                            class="form-control text-center"
-                            value="1"
-                            placeholder=""
-                            aria-label="Example text with button addon"
-                            aria-describedby="button-addon1"
-                          />
-                          <div class="input-group-append">
-                            <button
-                              class="btn btn-outline-primary js-btn-plus"
-                              type="button"
-                            >
-                              &plus;
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                      <td>$49.00</td>
-                      <td>
-                        <a href="#" class="btn btn-primary height-auto btn-sm">
+                        <a href="#" onClick={()=>{remove(item._id)}} class="btn btn-primary height-auto btn-sm">
                           X
                         </a>
                       </td>
                     </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -242,18 +422,18 @@ export default function Cart() {
           <div class="row">
             <div class="col-md-6">
               <div class="row mb-5">
-                <div class="col-md-6 mb-3 mb-md-0">
+                {/* <div class="col-md-6 mb-3 mb-md-0">
                   <button class="btn btn-primary btn-md btn-block">
                     Update Cart
                   </button>
-                </div>
+                </div> */}
                 <div class="col-md-6">
-                  <button class="btn btn-outline-primary btn-md btn-block">
+                  <a href="/shop"><button class="btn btn-outline-primary btn-md btn-block">
                     Continue Shopping
-                  </button>
+                  </button></a>
                 </div>
               </div>
-              <div class="row">
+              {/* <div class="row">
                 <div class="col-md-12">
                   <label class="text-black h4" for="coupon">
                     Coupon
@@ -273,7 +453,7 @@ export default function Cart() {
                     Apply Coupon
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div class="col-md-6 pl-5">
               <div class="row justify-content-end">
@@ -288,7 +468,15 @@ export default function Cart() {
                       <span class="text-black">Subtotal</span>
                     </div>
                     <div class="col-md-6 text-right">
-                      <strong class="text-black">$230.00</strong>
+                      <strong class="text-black">₹<span id="sub">{sub}</span></strong>
+                    </div>
+                  </div>
+                  <div id="couponspan" class="row mb-3 hidden">
+                    <div class="col-md-6">
+                      <span class="text-green"><span style={{color: "green"}}>Coupon</span></span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <strong class="text-green"><span style={{color: "green"}}>- ₹</span><span id="discount" style={{color: "green"}}>0</span></strong>
                     </div>
                   </div>
                   <div class="row mb-5">
@@ -296,7 +484,7 @@ export default function Cart() {
                       <span class="text-black">Total</span>
                     </div>
                     <div class="col-md-6 text-right">
-                      <strong class="text-black">$230.00</strong>
+                      <strong class="text-black">₹<span id="total">{total}</span></strong>
                     </div>
                   </div>
 
@@ -304,7 +492,7 @@ export default function Cart() {
                     <div class="col-md-12">
                       <button
                         class="btn btn-primary btn-lg btn-block"
-                        onclick="window.location='checkout.html'"
+                        onClick={makePayment}
                       >
                         Proceed To Checkout
                       </button>
@@ -423,5 +611,12 @@ export default function Cart() {
         </div>
       </footer>
     </div>
-  );
+  )}
+  else{
+    return(
+      <div>
+        Loading
+      </div>
+    )
+  }
 }
