@@ -1,108 +1,125 @@
 import React from "react";
+import { useState } from 'react';
+import { useEffect } from 'react';
+
 
 export default function Shop() {
+  const [fiction,setFiction] = useState('');
+  const [engineering,setEngineering] = useState('');
+  const [comics,setComics] = useState('');
+
+  useEffect(()=>{
+    getFiction();
+    getEngineering();
+    getComics();
+  },[])
+  function search(e){
+    e.preventDefault();
+    const key = document.getElementById("searchinp").value;
+    window.location.href = `/search/${key}`
+  }
+  async function getFiction(){
+    const res = await fetch('http://localhost:5000/category/Fiction',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await res.json();
+    setFiction(data.products);
+  }
+
+  async function getEngineering(){
+    const res = await fetch('http://localhost:5000/category/Engineering and Technology',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await res.json();
+    setEngineering(data.products);
+  }
+
+  async function getComics(){
+    const res = await fetch('http://localhost:5000/category/Comics',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await res.json();
+    setComics(data.products);
+  }
+
+
   function togglesearch() {
     console.log("toggle  called");
     document.getElementById("searchToggle").classList.toggle("active");
     console.log(document.getElementById("searchToggle").classList);
   }
+  if(fiction && engineering && comics){
   return (
     <div class="site-wrap">
-      <div class="site-navbar py-2">
-        <div class="search-wrap" id="searchToggle">
-          <div class="container">
-            <a href="#" class="search-close js-search-close">
-              <span onClick={togglesearch} className="icon-close2"></span>
-            </a>
-            <form action="#" method="post">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search keyword and hit enter..."
-              />
-            </form>
-          </div>
-        </div>
+      <div className="site-navbar py-2">
 
-        <div class="container">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="logo">
-              <div class="site-logo">
-                <a href="index.html" class="js-logo-clone">
-                  Pharma
-                </a>
-              </div>
-            </div>
-            <div class="main-nav d-none d-lg-block">
-              <nav
-                class="site-navigation text-right text-md-center"
-                role="navigation"
-              >
-                <ul class="site-menu js-clone-nav d-none d-lg-block">
-                  <li>
-                    <a href="index.html">Home</a>
-                  </li>
-                  <li class="active">
-                    <a href="shop.html">Store</a>
-                  </li>
-                  <li class="has-children">
-                    <a href="#">Dropdown</a>
-                    <ul class="dropdown">
-                      <li>
-                        <a href="#">Supplements</a>
-                      </li>
-                      <li class="has-children">
-                        <a href="#">Vitamins</a>
-                        <ul class="dropdown">
-                          <li>
-                            <a href="#">Supplements</a>
-                          </li>
-                          <li>
-                            <a href="#">Vitamins</a>
-                          </li>
-                          <li>
-                            <a href="#">Diet &amp; Nutrition</a>
-                          </li>
-                          <li>
-                            <a href="#">Tea &amp; Coffee</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="#">Diet &amp; Nutrition</a>
-                      </li>
-                      <li>
-                        <a href="#">Tea &amp; Coffee</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="about.html">About</a>
-                  </li>
-                  <li>
-                    <a href="contact.html">Contact</a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div className="icons">
-              <a href="#" class="icons-btn d-inline-block js-search-open">
-                <span onClick={togglesearch} className="icon-search"></span>
-              </a>
-              <a href="cart.html" class="icons-btn d-inline-block bag">
-                <span class="icon-shopping-bag"></span>
-                <span class="number">2</span>
-              </a>
-              <a
-                href="#"
-                class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"
-              >
-                <span class="icon-menu"></span>
-              </a>
-            </div>
-          </div>
-        </div>
+<div className="search-wrap" id='searchToggle'>
+  <div className="container">
+    <a className="search-close js-search-close"><span onClick={togglesearch} className="icon-close2"></span></a>
+    <form onSubmit={search}>
+            <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
+          </form>
+  </div>
+</div>
+
+<div className="container">
+  <div className="d-flex align-items-center justify-content-between">
+    <div className="logo">
+      <div className="site-logo">
+        <a href="/home" className="js-logo-clone">BookWorm</a>
       </div>
+    </div>
+    <div className="main-nav d-none d-lg-block">
+      <nav className="site-navigation text-right text-md-center" role="navigation">
+        <ul className="site-menu  d-none d-lg-block">
+          <li><a href="/home">Home</a></li>
+          <li className="active"><a href="/shop">Store</a></li>
+          {/* <li className="has-children">
+        <a href="#">Dropdown</a>
+        <ul className="dropdown">
+          <li><a href="#">Supplements</a></li>
+          <li className="has-children">
+            <a href="#">Vitamins</a>
+            <ul className="dropdown">
+              <li><a href="#">Supplements</a></li>
+              <li><a href="#">Vitamins</a></li>
+              <li><a href="#">Diet &amp; Nutrition</a></li>
+              <li><a href="#">Tea &amp; Coffee</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Diet &amp; Nutrition</a></li>
+          <li><a href="#">Tea &amp; Coffee</a></li>
+          
+        </ul>
+      </li> */}
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/productform">Sell</a></li>
+          <li><a href="/myproducts">My Products</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div className="icons">
+      <a href='#' className="icons-btn d-inline-block js-search-open"><span onClick={togglesearch} className="icon-search"></span></a>
+      <a href="/cart" className="icons-btn d-inline-block bag">
+        <span className="icon-shopping-bag"></span>
+        {/* <span className="number">2</span>  */}
+      </a>
+      <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
+        className="icon-menu"></span></a>
+    </div>
+  </div>
+</div>
+</div>
 
       <div class="bg-light py-3">
         <div class="container">
@@ -115,10 +132,10 @@ export default function Shop() {
         </div>
       </div>
 
-      <div class="site-section">
+      {/* <div class="site-section">
         <div class="container">
           <div class="row">
-            {/* <div class="col-lg-6">
+            <div class="col-lg-6">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">
                 Filter by Price
               </h3>
@@ -130,7 +147,7 @@ export default function Shop() {
                 class="form-control border-0 pl-0 bg-white"
                 disabled=""
               />
-            </div> */}
+            </div>
             <div class="col-lg-6">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">
                 Filter by Reference
@@ -338,113 +355,240 @@ export default function Shop() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+       <div className="site-section">
+      <div className="container">
+      {/* <div class="row">
+            <div class="col-lg-6">
+              <h3 class="mb-3 h6 text-uppercase text-black d-block">
+                Filter by Reference
+              </h3>
+              <button
+                type="button"
+                class="btn btn-secondary btn-md dropdown-toggle px-4"
+                id="dropdownMenuReference"
+                data-toggle="dropdown"
+              >
+                Reference
+              </button>
+              <div
+                class="dropdown-menu"
+                aria-labelledby="dropdownMenuReference"
+              >
+                <a class="dropdown-item" href="#">
+                  Relevance
+                </a>
+                <a class="dropdown-item" href="#">
+                  Name, A to Z
+                </a>
+                <a class="dropdown-item" href="#">
+                  Name, Z to A
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">
+                  Price, low to high
+                </a>
+                <a class="dropdown-item" href="#">
+                  Price, high to low
+                </a>
+              </div>
+            </div>
+          </div> */}
+        <div className="row">
+          <div className="title-section text-center col-12">
+            <h2 className="text-uppercase">Fiction</h2>
+          </div>
+        </div>
 
-      <div
-        class="site-section bg-secondary bg-image"
-        style={{ backgroundImage: "url('images/bg_2.jpg')" }}
-      >
-        <div class="container">
-          <div class="row align-items-stretch">
-            <div class="col-lg-6 mb-5 mb-lg-0">
-              <a
-                href="#"
-                class="banner-1 h-100 d-flex"
-                style={{ backgroundImage: "url('images/bg_1.jpg')" }}
-              >
-                <div class="banner-1-inner align-self-center">
-                  <h2>Pharma Products</h2>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Molestiae ex ad minus rem odio voluptatem.
-                  </p>
-                </div>
-              </a>
-            </div>
-            <div class="col-lg-6 mb-5 mb-lg-0">
-              <a
-                href="#"
-                class="banner-1 h-100 d-flex"
-                style={{ backgroundImage: "url('images/bg_2.jpg')" }}
-              >
-                <div class="banner-1-inner ml-auto  align-self-center">
-                  <h2>Rated by Experts</h2>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Molestiae ex ad minus rem odio voluptatem.
-                  </p>
-                </div>
-              </a>
-            </div>
+        <div className="row" style={{justifyContent: "space-evenly"}}>
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <span className="tag">Sale</span>
+            <a href="shop-single.html"> <img src="images/product_01.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Bioderma</a></h3>
+            <p className="price"><del>95.00</del> &mdash; $55.00</p>
+          </div> */}
+          {fiction.map((prod)=>
+          <div className="col-sm-5 col-lg-4 text-center item mb-4 my-2 mx-2" style={{boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",borderRadius: "10px"}}>
+            <a href={`/details/${prod._id}`}> <img src={prod.image} alt="Image" height="300" width="300" style={{marginTop: "2em",boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}} /></a>
+            <h3 className="text-dark"><a href={`/details/${prod._id}`}>{prod.title}</a></h3>
+            <p className="price">₹ {prod.price}</p>
+          </div>
+          )
+          }
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="shop-single.html"> <img src="images/product_03.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
+            <p className="price">$120.00</p>
+          </div>
+
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+
+            <a href="shop-single.html"> <img src="images/product_04.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Cetyl Pure</a></h3>
+            <p className="price"><del>45.00</del> &mdash; $20.00</p>
+          </div>
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="shop-single.html"> <img src="images/product_05.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">CLA Core</a></h3>
+            <p className="price">$38.00</p>
+          </div>
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <span className="tag">Sale</span>
+            <a href="shop-single.html"> <img src="images/product_06.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
+            <p className="price"><del>$89</del> &mdash; $38.00</p>
+          </div> */}
+        </div>
+
+
+        <div className="row mt-5" style={{marginBottom: "5em"}}>
+          <div className="col-12 text-center">
+            <a href="/category/Fiction" className="btn btn-primary px-4 py-3">View All</a>
+          </div>
+        </div>
+
+
+        <div className="row">
+          <div className="title-section text-center col-12">
+            <h2 className="text-uppercase">Engineering</h2>
+          </div>
+        </div>
+
+        <div className="row" style={{justifyContent: "space-evenly"}}>
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <span className="tag">Sale</span>
+            <a href="shop-single.html"> <img src="images/product_01.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Bioderma</a></h3>
+            <p className="price"><del>95.00</del> &mdash; $55.00</p>
+          </div> */}
+          {engineering.map((prod)=>
+          <div className="col-sm-5 col-lg-4 text-center item mb-4 my-2 mx-2" style={{boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",borderRadius: "10px"}}>
+            <a href={`/details/${prod._id}`}> <img src={prod.image} alt="Image" height="300" width="300" style={{marginTop: "2em",boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}} /></a>
+            <h3 className="text-dark"><a href={`/details/${prod._id}`}>{prod.title}</a></h3>
+            <p className="price">₹ {prod.price}</p>
+          </div>
+          )
+          }
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="shop-single.html"> <img src="images/product_03.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
+            <p className="price">$120.00</p>
+          </div>
+
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+
+            <a href="shop-single.html"> <img src="images/product_04.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Cetyl Pure</a></h3>
+            <p className="price"><del>45.00</del> &mdash; $20.00</p>
+          </div>
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="shop-single.html"> <img src="images/product_05.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">CLA Core</a></h3>
+            <p className="price">$38.00</p>
+          </div>
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <span className="tag">Sale</span>
+            <a href="shop-single.html"> <img src="images/product_06.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
+            <p className="price"><del>$89</del> &mdash; $38.00</p>
+          </div> */}
+        </div>
+        <div className="row mt-5" style={{marginBottom: "5em"}}>
+          <div className="col-12 text-center">
+            <a href="/category/Engineering and Technology" className="btn btn-primary px-4 py-3">View All</a>
+          </div>
+        </div>
+
+
+        <div className="row">
+          <div className="title-section text-center col-12">
+            <h2 className="text-uppercase">Comics</h2>
+          </div>
+        </div>
+
+        <div className="row" style={{justifyContent: "space-evenly"}}>
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <span className="tag">Sale</span>
+            <a href="shop-single.html"> <img src="images/product_01.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Bioderma</a></h3>
+            <p className="price"><del>95.00</del> &mdash; $55.00</p>
+          </div> */}
+          {comics.map((prod)=>
+          <div className="col-sm-5 col-lg-4 text-center item mb-4 my-2 mx-2" style={{boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",borderRadius: "10px"}}>
+            <a href={`/details/${prod._id}`}> <img src={prod.image} alt="Image" height="300" width="300" style={{marginTop: "2em",boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}} /></a>
+            <h3 className="text-dark"><a href={`/details/${prod._id}`}>{prod.title}</a></h3>
+            <p className="price">₹ {prod.price}</p>
+          </div>
+          )
+          }
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="shop-single.html"> <img src="images/product_03.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
+            <p className="price">$120.00</p>
+          </div>
+
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+
+            <a href="shop-single.html"> <img src="images/product_04.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Cetyl Pure</a></h3>
+            <p className="price"><del>45.00</del> &mdash; $20.00</p>
+          </div>
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="shop-single.html"> <img src="images/product_05.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">CLA Core</a></h3>
+            <p className="price">$38.00</p>
+          </div>
+          <div className="col-sm-6 col-lg-4 text-center item mb-4">
+            <span className="tag">Sale</span>
+            <a href="shop-single.html"> <img src="images/product_06.png" alt="Image" /></a>
+            <h3 className="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
+            <p className="price"><del>$89</del> &mdash; $38.00</p>
+          </div> */}
+        </div>
+        <div className="row mt-5" style={{marginBottom: "5em"}}>
+          <div className="col-12 text-center">
+            <a href="/category/Comics" className="btn btn-primary px-4 py-3">View All</a>
           </div>
         </div>
       </div>
+    </div>
+    <hr style={{ border: "2px solid black" }} />
+    <footer className="site-footer">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 col-lg-3 mb-4 mb-lg-0">
 
-      <footer class="site-footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
-              <div class="block-7">
-                <h3 class="footer-heading mb-4">About Us</h3>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius
-                  quae reiciendis distinctio voluptates sed dolorum excepturi
-                  iure eaque, aut unde.
-                </p>
+                <div className="block-7">
+                  <h3 className="footer-heading mb-4">About Us</h3>
+                  <p>Made by students. For students. We are students just like you who have faced the same problem of buying books every semester. Rather than buying new books we found a better solution and are sharing it with you.</p>
+                </div>
+
               </div>
-            </div>
-            <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-              <h3 class="footer-heading mb-4">Quick Links</h3>
-              <ul class="list-unstyled">
-                <li>
-                  <a href="#">Supplements</a>
-                </li>
-                <li>
-                  <a href="#">Vitamins</a>
-                </li>
-                <li>
-                  <a href="#">Diet &amp; Nutrition</a>
-                </li>
-                <li>
-                  <a href="#">Tea &amp; Coffee</a>
-                </li>
-              </ul>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-              <div class="block-5 mb-5">
-                <h3 class="footer-heading mb-4">Contact Info</h3>
-                <ul class="list-unstyled">
-                  <li class="address">
-                    203 Fake St. Mountain View, San Francisco, California, USA
-                  </li>
-                  <li class="phone">
-                    <a href="tel://23923929210">+2 392 3929 210</a>
-                  </li>
-                  <li class="email">emailaddress@domain.com</li>
+              <div className="col-lg-3 mx-auto mb-5 mb-lg-0">
+                <h3 className="footer-heading mb-4">Quick Links</h3>
+                <ul className="list-unstyled">
+                  <li><a href="/shop">Store</a></li>
+                  <li><a href="/contact">Contact</a></li>
+                  <li><a href="/productform">Sell</a></li>
                 </ul>
               </div>
+
+              <div className="col-md-6 col-lg-3">
+                <div className="block-5 mb-5">
+                  <h3 className="footer-heading mb-4">Contact Info</h3>
+                  <ul className="list-unstyled">
+                    <li className="address">VESIT, Hashu Adwani Memorial Complex, Collector's Colony, Chembur, Mumbai, Maharashtra 400074</li>
+                    <li className="phone"><a href="tel://999999999">9999999999</a></li>
+                    <li className="email">emailaddress</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="row pt-5 mt-5 text-center">
-            <div class="col-md-12">
-              <p>
-                Copyright &copy;
-                <script>document.write(new Date().getFullYear());</script> All
-                rights reserved | This template is made with{" "}
-                <i class="icon-heart" aria-hidden="true"></i> by{" "}
-                <a
-                  href="https://colorlib.com"
-                  target="_blank"
-                  class="text-primary"
-                >
-                  Colorlib
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
     </div>
   );
+  }else{
+    return(<div>Loading</div>)
+  }
 }

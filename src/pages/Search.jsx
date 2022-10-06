@@ -7,142 +7,146 @@ import './css/aos.css';
 import './css/style.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import {useParams} from 'react-router-dom'
 
-export default function Home() {
+export default function Search() {
+  var {key} = useParams();
+  const [products,setProducts] = useState('');
 
-  const [products, setProducts] = useState('');
-
-  useEffect(() => {
+  useEffect(()=>{
     getProducts();
-  }, [])
+  },[])
 
-  async function getProducts() {
-    const res = await fetch('http://localhost:5000/products', {
+  async function getProducts(){
+    const res = await fetch(`http://localhost:5000/search/${key}`,{
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     })
     const data = await res.json();
     setProducts(data.products);
   }
 
-  function togglesearch() {
-    console.log('toggle  called');
-    document.getElementById('searchToggle').classList.toggle('active');
-    console.log(document.getElementById('searchToggle').classList);
-  }
-  function search(e){
-    e.preventDefault();
-    const key = document.getElementById("searchinp").value;
-    window.location.href = `/search/${key}`
-  }
-  if (products) {
-    return (
-      <div className="site-wrap">
+    function togglesearch(){
+        console.log('toggle  called');
+        document.getElementById('searchToggle').classList.toggle('active');
+        console.log(document.getElementById('searchToggle').classList);
+    }
+
+    function search(e){
+      e.preventDefault();
+      const key = document.getElementById("searchinp").value;
+      window.location.href = `/search/${key}`
+    }
+if(products){
+  return (
+    <div className="site-wrap">
 
 
-        <div className="site-navbar py-2">
+<div className="site-navbar py-2">
 
-          <div className="search-wrap" id='searchToggle'>
-            <div className="container">
-              <a className="search-close js-search-close"><span onClick={togglesearch} className="icon-close2"></span></a>
-              <form onSubmit={search}>
-            <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
-          </form>
-            </div>
-          </div>
+<div className="search-wrap" id='searchToggle'>
+  <div className="container">
+    <a className="search-close js-search-close"><span onClick={togglesearch} className="icon-close2"></span></a>
+    <form onSubmit={search}>
+  <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
+</form>
+  </div>
+</div>
 
-          <div className="container">
-            <div className="d-flex align-items-center justify-content-between">
-              <div className="logo">
-                <div className="site-logo">
-                  <a href="/home" className="js-logo-clone">BookWorm</a>
-                </div>
-              </div>
-              <div className="main-nav d-none d-lg-block">
-                <nav className="site-navigation text-right text-md-center" role="navigation">
-                  <ul className="site-menu  d-none d-lg-block">
-                    <li className="active"><a href="/home">Home</a></li>
-                    <li><a href="/shop">Store</a></li>
-                    {/* <li className="has-children">
-                  <a href="#">Dropdown</a>
-                  <ul className="dropdown">
-                    <li><a href="#">Supplements</a></li>
-                    <li className="has-children">
-                      <a href="#">Vitamins</a>
-                      <ul className="dropdown">
-                        <li><a href="#">Supplements</a></li>
-                        <li><a href="#">Vitamins</a></li>
-                        <li><a href="#">Diet &amp; Nutrition</a></li>
-                        <li><a href="#">Tea &amp; Coffee</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
-                    
-                  </ul>
-                </li> */}
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/productform">Sell</a></li>
-                    <li><a href="/myproducts">My Products</a></li>
-                  </ul>
-                </nav>
-              </div>
-              <div className="icons">
-                <a href='#' className="icons-btn d-inline-block js-search-open"><span onClick={togglesearch} className="icon-search"></span></a>
-                <a href="/cart" className="icons-btn d-inline-block bag">
-                  <span className="icon-shopping-bag"></span>
-                  {/* <span className="number">2</span>  */}
-                </a>
-                <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
-                  className="icon-menu"></span></a>
-              </div>
+<div className="container">
+  <div className="d-flex align-items-center justify-content-between">
+    <div className="logo">
+      <div className="site-logo">
+        <a href="/home" className="js-logo-clone">BookWorm</a>
+      </div>
+    </div>
+    <div className="main-nav d-none d-lg-block">
+      <nav className="site-navigation text-right text-md-center" role="navigation">
+        <ul className="site-menu  d-none d-lg-block">
+          <li className="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Store</a></li>
+          {/* <li className="has-children">
+        <a href="#">Dropdown</a>
+        <ul className="dropdown">
+          <li><a href="#">Supplements</a></li>
+          <li className="has-children">
+            <a href="#">Vitamins</a>
+            <ul className="dropdown">
+              <li><a href="#">Supplements</a></li>
+              <li><a href="#">Vitamins</a></li>
+              <li><a href="#">Diet &amp; Nutrition</a></li>
+              <li><a href="#">Tea &amp; Coffee</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Diet &amp; Nutrition</a></li>
+          <li><a href="#">Tea &amp; Coffee</a></li>
+          
+        </ul>
+      </li> */}
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/productform">Sell</a></li>
+          <li><a href="/myproducts">My Products</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div className="icons">
+      <a href='#' className="icons-btn d-inline-block js-search-open"><span onClick={togglesearch} className="icon-search"></span></a>
+      <a href="/cart" className="icons-btn d-inline-block bag">
+        <span className="icon-shopping-bag"></span>
+        {/* <span className="number">2</span>  */}
+      </a>
+      <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
+        className="icon-menu"></span></a>
+    </div>
+  </div>
+</div>
+</div>
+
+    {/* <div className="site-blocks-cover"  style={{backgroundImage: "url('images/hero_1.jpg')"}} >
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-7 mx-auto order-lg-2 align-self-center">
+            <div className="site-block-cover-content text-center">
+              <h2 className="sub-title">Effective Medicine, New Medicine Everyday</h2>
+              <h1>Welcome To Pharma</h1>
+              <p>
+                <a href="/shop" className="btn btn-primary px-5 py-3">Shop Now</a>
+              </p>
             </div>
           </div>
         </div>
+      </div>
+    </div> */}
 
-        <div className="site-blocks-cover" style={{ backgroundImage: "url('https://www.incimages.com/uploaded_files/image/1920x1080/getty_655998316_2000149920009280219_363765.jpg')" }} >
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-7 mx-auto order-lg-2 align-self-center">
-                <div className="site-block-cover-content text-center">
-                  <h2 className="sub-title" style={{color: "black"}}>Effective Book, New Books Everyday</h2>
-                  <h1 >Welcome To BookWorm</h1>
-                  <p>
-                    <a href="/shop" className="btn btn-primary px-5 py-3">Shop Now</a>
-                  </p>
-                </div>
-              </div>
+    {/* <div className="site-section">
+      <div className="container">
+        <div className="row align-items-stretch section-overlap" style={{justifyContent: "space-evenly"}}>
+          <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
+            <div className="banner-wrap bg-primary h-100">
+              <a href="#" className="h-100">
+                <h5>Free <br/> Shipping</h5>
+                <p>
+                  Amet sit amet dolor
+                  <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+                </p>
+              </a>
             </div>
           </div>
-        </div>
-
-        <div className="site-section">
-          <div className="container">
-            <div className="row align-items-stretch section-overlap" style={{ justifyContent: "space-evenly" }}>
-              <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                <div className="banner-wrap bg-primary h-100">
-                  <a href="/shop" className="h-100">
-                    <h5>Daily new<br/>Books</h5>
-                    <p style={{fontSize:"15px"}}>
-                      New books are added everyday, so keep looking till you find it.
-                    </p>
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                <div className="banner-wrap h-100">
-                  <a href="/shop" className="h-100">
-                    <h5>Festive Sale <br /> Get upto 50% Off</h5>
-                    <p style={{fontSize:"15px"}}>
-                      Coming soon to your nearest devices.
-                    </p>
-                  </a>
-                </div>
-              </div>
-              {/* <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
+          <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
+            <div className="banner-wrap h-100">
+              <a href="#" className="h-100">
+                <h5>Season <br/> Get upto 50% Off</h5>
+                <p>
+                  Amet sit amet dolor
+                  <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+                </p>
+              </a>
+            </div>
+          </div>
+          <div className="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div className="banner-wrap bg-warning h-100">
               <a href="#" className="h-100">
                 <h5>Buy <br/> A Gift Card</h5>
@@ -152,36 +156,36 @@ export default function Home() {
                 </p>
               </a>
             </div>
-          </div> */}
+          </div>
 
-            </div>
+        </div>
+      </div>
+    </div> */}
+
+    <div className="site-section">
+      <div className="container">
+        <div className="row">
+          <div className="title-section text-center col-12">
+            <h2 className="text-uppercase">Search Results</h2>
           </div>
         </div>
 
-        <div className="site-section">
-          <div className="container">
-            <div className="row">
-              <div className="title-section text-center col-12">
-                <h2 className="text-uppercase">Newly Added</h2>
-              </div>
-            </div>
-
-            <div className="row" style={{ justifyContent: "space-evenly" }}>
-              {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+        <div className="row" style={{justifyContent: "space-evenly"}}>
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
             <span className="tag">Sale</span>
             <a href="shop-single.html"> <img src="images/product_01.png" alt="Image" /></a>
             <h3 className="text-dark"><a href="shop-single.html">Bioderma</a></h3>
             <p className="price"><del>95.00</del> &mdash; $55.00</p>
           </div> */}
-              {products.map((prod) =>
-                <div className="col-sm-5 col-lg-4 text-center item mb-4 my-2 mx-2" style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)", borderRadius: "10px" }}>
-                  <a href={`/details/${prod._id}`}> <img src={prod.image} alt="Image" height="300" width="300" style={{ marginTop: "2em", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }} /></a>
-                  <h3 className="text-dark"><a href={`/details/${prod._id}`}>{prod.title}</a></h3>
-                  <p className="price">₹ {prod.price}</p>
-                </div>
-              )
-              }
-              {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
+          {products.map((prod)=>
+          <div className="col-sm-5 col-lg-4 text-center item mb-4 my-2 mx-2" style={{boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",borderRadius: "10px"}}>
+            <a href={`/details/${prod._id}`}> <img src={prod.image} alt="Image" height="300" width="300" style={{marginTop: "2em",boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}} /></a>
+            <h3 className="text-dark"><a href={`/details/${prod._id}`}>{prod.title}</a></h3>
+            <p className="price">₹ {prod.price}</p>
+          </div>
+          )
+          }
+          {/* <div className="col-sm-6 col-lg-4 text-center item mb-4">
             <a href="shop-single.html"> <img src="images/product_03.png" alt="Image" /></a>
             <h3 className="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
             <p className="price">$120.00</p>
@@ -204,17 +208,17 @@ export default function Home() {
             <h3 className="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
             <p className="price"><del>$89</del> &mdash; $38.00</p>
           </div> */}
-            </div>
-            {/* <div className="row mt-5">
+        </div>
+        {/* <div className="row mt-5">
           <div className="col-12 text-center">
             <a href="shop.html" className="btn btn-primary px-4 py-3">View All Products</a>
           </div>
         </div> */}
-          </div>
-        </div>
+      </div>
+    </div>
 
-
-        {/* <div className="site-section bg-light">
+    
+    {/* <div className="site-section bg-light">
       <div className="container">
         <div className="row">
           <div className="title-section text-center col-12">
@@ -255,7 +259,7 @@ export default function Home() {
       </div>
     </div> */}
 
-        {/* <div className="site-section">
+    {/* <div className="site-section">
       <div className="container">
         <div className="row">
           <div className="title-section text-center col-12">
@@ -314,7 +318,7 @@ export default function Home() {
       </div>
     </div> */}
 
-        {/* <div className="site-section bg-secondary bg-image" style={{backgroundImage: "url('./images/bg_2.jpg')"}}>
+    {/* <div className="site-section bg-secondary bg-image" style={{backgroundImage: "url('./images/bg_2.jpg')"}}>
       <div className="container">
         <div className="row align-items-stretch">
           <div className="col-lg-6 mb-5 mb-lg-0">
@@ -339,7 +343,7 @@ export default function Home() {
       </div>
     </div> */}
 
-        <hr style={{ border: "2px solid black" }} />
+<hr style={{ border: "2px solid black" }} />
         <footer className="site-footer">
           <div className="container">
             <div className="row">
@@ -373,15 +377,15 @@ export default function Home() {
             </div>
           </div>
         </footer>
-      </div>
+  </div>
 
-    )
-  }
-  else {
-    return (
-      <div>
-        Loading
-      </div>
-    )
-  }
+  )
+}
+else{
+  return(
+    <div>
+      Loading
+    </div>
+  )
+}
 }

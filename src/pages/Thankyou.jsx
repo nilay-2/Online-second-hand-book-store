@@ -1,6 +1,11 @@
 import React from "react";
 
 export default function Thankyou(){
+  function search(e){
+    e.preventDefault();
+    const key = document.getElementById("searchinp").value;
+    window.location.href = `/search/${key}`
+  }
     return(
         <div class="site-wrap">
 
@@ -10,8 +15,8 @@ export default function Thankyou(){
       <div class="search-wrap">
         <div class="container">
           <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-          <form action="#" method="post">
-            <input type="text" class="form-control" placeholder="Search keyword and hit enter..."/>
+          <form onSubmit={search}>
+            <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
           </form>
         </div>
       </div>

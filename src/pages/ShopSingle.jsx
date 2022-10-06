@@ -14,6 +14,12 @@ export default function ShopSingle() {
         getDetails();
     },[])
 
+    function search(e){
+        e.preventDefault();
+        const key = document.getElementById("searchinp").value;
+        window.location.href = `/search/${key}`
+      }
+
     async function addToCart(){
         const res = await fetch('http://localhost:5000/cart/add',{
             method: "POST",
@@ -69,9 +75,9 @@ export default function ShopSingle() {
                 <div class="search-wrap">
                     <div class="container">
                         <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-                        <form action="#" method="post">
-                            <input type="text" class="form-control" placeholder="Search keyword and hit enter..." />
-                        </form>
+                        <form onSubmit={search}>
+            <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
+          </form>
                     </div>
                 </div>
 
