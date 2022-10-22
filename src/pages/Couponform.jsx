@@ -44,7 +44,7 @@ export default function Couponform() {
                         <input type="text" id="form2Example2" value={to} onChange = {(e)=>{setTo(e.target.value)}} class="form-control" />
                     </div>
                     <div class="form-outline mb-4">
-                        <label class="form-label" for="form2Example2">New Price</label>
+                        <label class="form-label" for="form2Example2">Discount</label>
                         <input type="number" id="form2Example2" value={nprice} onChange = {(e)=>{setNprice(e.target.value)}} class="form-control" />
                     </div>
                     <div class="form-outline mb-4">

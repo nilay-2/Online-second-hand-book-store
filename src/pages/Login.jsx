@@ -36,7 +36,7 @@ export default function Login() {
         window.location.href = '/home';
       }
       else{
-        alert('Invalid Credential')
+        alert(data.status)
       }
     }
 

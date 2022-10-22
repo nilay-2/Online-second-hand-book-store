@@ -24,9 +24,11 @@ export default function Register() {
   
       const data = await res.json();
       if(data.status === 'ok'){
-        console.log(data);
-        alert('User Created')
+        alert('Verification Link Sent To Registered Email');
         window.location.href = '/';
+      }
+      else if(data.status ==='error' && data.error === 'Email Not Valid'){
+        alert('Please Enter Valid Email');
       }
       console.log(data)
     }

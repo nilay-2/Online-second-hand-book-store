@@ -507,7 +507,7 @@ export default function Cart() {
                   <ul className="list-unstyled">
                     <li className="address">VESIT, Hashu Adwani Memorial Complex, Collector's Colony, Chembur, Mumbai, Maharashtra 400074</li>
                     <li className="phone"><a href="tel://999999999">9999999999</a></li>
-                    <li className="email">emailaddress</li>
+                    <li className="email"><a href="bookworm@gmail.com">bookworm@gmail.com</a></li>
                   </ul>
                 </div>
               </div>

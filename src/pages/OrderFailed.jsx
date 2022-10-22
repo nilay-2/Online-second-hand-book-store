@@ -14,90 +14,66 @@ export default function OrderFailed() {
   }
   return (
     <div class="site-wrap">
-      <div className="site-navbar py-2">
-        <div className="search-wrap" id="searchToggle">
-          <div className="container">
-            <a className="search-close js-search-close">
-              <span onClick={togglesearch} className="icon-close2"></span>
-            </a>
-            <form onSubmit={search}>
-            <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
-          </form>
-          </div>
-        </div>
+<div className="site-navbar py-2">
 
-        <div className="container">
-          <div className="d-flex align-items-center justify-content-between">
-            <div className="logo">
-              <div className="site-logo">
-                <a href="/home" className="js-logo-clone">
-                  BookWorm
-                </a>
-              </div>
-            </div>
-            <div className="main-nav d-none d-lg-block">
-              <nav
-                className="site-navigation text-right text-md-center"
-                role="navigation"
-              >
-                <ul className="site-menu  d-none d-lg-block">
-                  <li>
-                    <a href="/home">Home</a>
-                  </li>
-                  <li>
-                    <a href="/shop">Store</a>
-                  </li>
-                  {/* <li className="has-children">
-<a href="#">Dropdown</a>
-<ul className="dropdown">
-<li><a href="#">Supplements</a></li>
-<li className="has-children">
-<a href="#">Vitamins</a>
-<ul className="dropdown">
-<li><a href="#">Supplements</a></li>
-<li><a href="#">Vitamins</a></li>
-<li><a href="#">Diet &amp; Nutrition</a></li>
-<li><a href="#">Tea &amp; Coffee</a></li>
-</ul>
-</li>
-<li><a href="#">Diet &amp; Nutrition</a></li>
-<li><a href="#">Tea &amp; Coffee</a></li>
+<div className="search-wrap" id='searchToggle'>
+  <div className="container">
+    <a className="search-close js-search-close"><span onClick={togglesearch} className="icon-close2"></span></a>
+    <form onSubmit={search}>
+  <input type="text" id='searchinp' className="form-control" placeholder="Search keyword and hit enter..." />
+</form>
+  </div>
+</div>
 
-</ul>
-</li> */}
-                  <li>
-                    <a href="/about">About</a>
-                  </li>
-                  <li>
-                    <a href="/contact">Contact</a>
-                  </li>
-                  <li>
-                    <a href="/productform">Sell</a>
-                  </li>
-                  <li>
-                    <a href="/myproducts">My Products</a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div className="icons">
-              <a href="#" className="icons-btn d-inline-block js-search-open">
-                <span onClick={togglesearch} className="icon-search"></span>
-              </a>
-              <a href="/cart" className="icons-btn d-inline-block bag">
-                <span className="icon-shopping-bag"></span>
-                {/* <span className="number">2</span>  */}
-              </a>
-              <a
-                href="#"
-                className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"
-              >
-                <span className="icon-menu"></span>
-              </a>
-            </div>
-          </div>
-        </div>
+<div className="container">
+  <div className="d-flex align-items-center justify-content-between">
+    <div className="logo">
+      <div className="site-logo">
+        <a href="/home" className="js-logo-clone">BookWorm</a>
       </div>
+    </div>
+    <div className="main-nav d-none d-lg-block">
+      <nav className="site-navigation text-right text-md-center" role="navigation">
+        <ul className="site-menu  d-none d-lg-block">
+          <li className="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Store</a></li>
+          {/* <li className="has-children">
+        <a href="#">Dropdown</a>
+        <ul className="dropdown">
+          <li><a href="#">Supplements</a></li>
+          <li className="has-children">
+            <a href="#">Vitamins</a>
+            <ul className="dropdown">
+              <li><a href="#">Supplements</a></li>
+              <li><a href="#">Vitamins</a></li>
+              <li><a href="#">Diet &amp; Nutrition</a></li>
+              <li><a href="#">Tea &amp; Coffee</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Diet &amp; Nutrition</a></li>
+          <li><a href="#">Tea &amp; Coffee</a></li>
+          
+        </ul>
+      </li> */}
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/productform">Sell</a></li>
+          <li><a href="/myproducts">My Products</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div className="icons">
+      <a href='#' className="icons-btn d-inline-block js-search-open"><span onClick={togglesearch} className="icon-search"></span></a>
+      <a href="/cart" className="icons-btn d-inline-block bag">
+        <span className="icon-shopping-bag"></span>
+        {/* <span className="number">2</span>  */}
+      </a>
+      <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
+        className="icon-menu"></span></a>
+    </div>
+  </div>
+</div>
+</div>
 
       <div class="bg-light py-3">
         <div class="container">
@@ -177,7 +153,7 @@ export default function OrderFailed() {
                   <li className="phone">
                     <a href="tel://999999999">9999999999</a>
                   </li>
-                  <li className="email">emailaddress</li>
+                  <li className="email"><a href="bookworm@gmail.com">bookworm@gmail.com</a></li>
                 </ul>
               </div>
             </div>
